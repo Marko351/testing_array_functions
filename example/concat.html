@@ -1,0 +1,119 @@
+<script src="../simpletest.js"></script>
+<script>
+
+  // Definition:
+    //The concat() method is used to merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.
+
+  // Function signature:
+    // oldArray.concat([value1[, value2[,valueN ]]])
+
+  // Return value:
+    // new concatinate array
+
+  // Function implementation: 
+  /* 
+    function concat(oldArray, arrayToConcat){
+      const newArray = []; 
+      const args = [];
+
+      for(let i = 0; i<arguments.length; i++){
+        args.push(arguments[i]);
+      }
+
+      for(let i = 0; i<args.length; i++){
+        if(Array.isArray(args[i])){
+          args[i].forEach((elem) => {
+            newArray.push(elem)
+          })
+        }else{
+          newArray.push(args[i]);
+        }
+      }
+
+      return newArray;
+    } 
+  */
+
+  /*
+    --concat() does not change the oldArray, but instead return newArray.
+    --If valueN is undefined, concat returns a shallow copy of the existing array on which it is called.
+    --If valueN is not array concat single value to newAray
+    --if valueN is array concat elements of valueN in newArray
+  */
+
+  function concat(oldArray, valueN){
+    if(arguments < 1 || Array.isArray(oldArray) === false){
+      return 'You must specified Array as first argument in function';
+    }
+    const newAray = [...oldArray];
+    const args = [];
+
+    for(let j = 1; j<arguments.length; j++){
+      args.push(arguments[j])
+    }
+
+    args.forEach(function(arg){
+      if(Array.isArray(arg)){
+        arg.forEach(function(elem){
+          newAray.push(elem);
+        })
+      }else{
+        newAray.push(arg);
+      }
+    })
+
+    return newAray;
+  }
+
+  tests({
+    'If oldArray is not defined or if oldArray is not Array it should return error message':function(){
+      const returnedValue1 = concat();
+      const returnedValue2 = concat('error');
+
+      eq(returnedValue1, 'You must specified Array as first argument in function');
+      eq(returnedValue2, 'You must specified Array as first argument in function');
+    },
+    'It should return array':function(){
+      var returnedValue = concat([]);
+
+      eq(Array.isArray(returnedValue), true);
+    },
+    'It should not change oldArray': function(){
+      const arr = [1,2,3];
+      concat(arr)
+
+      eq(arr[0], 1);
+      eq(arr[1], 2);
+      eq(arr[2], 3);
+      eq(arr.length, 3);
+    },
+    'If valueN is undefined it should return shallow copy of oldArray':function(){
+      const returnedValue = concat([1,2,3]);
+
+      eq(returnedValue[0], 1);
+      eq(returnedValue[1], 2);
+      eq(returnedValue[2], 3);
+    },
+    'If valueN is array it should add his elements to newArray': function(){
+      const returnedValue = concat([1,2,3], [4]);
+
+      eq(returnedValue[3], 4);
+    },
+    'If valueN is not array it should add that element to newArray': function(){
+      const returnedValue = concat([1,2,3], {});
+
+      eq(typeof returnedValue[3] === 'object', true);
+    },
+    'If there are more than one element to concat, it should concat all arguments according to the above rules':function(){
+      const returnedValue = concat([1], [2], 'b', {}, [3]);
+
+      eq(returnedValue[1], 2);
+      eq(returnedValue[2], 'b');
+      eq(typeof returnedValue[3] === 'object', true);
+      eq(returnedValue[4], 3);
+    }
+  })
+
+    
+    
+</script>
